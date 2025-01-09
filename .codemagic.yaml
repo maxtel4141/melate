@@ -1,0 +1,30 @@
+workflows:
+  kotlin_script_workflow:
+    name: Kotlin Script Workflow
+    max_build_duration: 20 # Maximum duration for the build (in minutes)
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    scripts:
+      - name: Install Kotlin Compiler
+        script: |
+          echo "Installing Kotlin compiler..."
+          sudo apt-get update
+          sudo apt-get install -y kotlin
+
+      - name: Compile Kotlin Script
+        script: |
+          echo "Compiling Kotlin script..."
+          kotlinc Main.kt -include-runtime -d main.jar
+
+      - name: Execute Kotlin Script
+        script: |
+          echo "Running Kotlin script..."
+          java -jar main.jar
+
+    artifacts:
+      - main.jar  # Save the compiled Kotlin JAR as an artifact
